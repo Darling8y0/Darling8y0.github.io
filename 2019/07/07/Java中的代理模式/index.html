@@ -447,7 +447,7 @@ height:50vh;
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 创建动态代理对象</span></span><br><span class="line"><span class="comment"> * 动态代理不需要实现接口，但是需要指定接口类型</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyFactory</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//维护一个目标对象</span></span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ProxyFactory</span><span class="params">(Object target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.target=target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//给目标对象生成代理对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProxyInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(</span><br><span class="line">                target.getClass().getClassLoader()，</span><br><span class="line">                target.getClass().getInterfaces()，</span><br><span class="line">                <span class="keyword">new</span> InvocationHandler() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy， Method method， Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                        System.out.println(<span class="string">"开始事务2"</span>);</span><br><span class="line">                        <span class="comment">//运用反射执行目标对象方法</span></span><br><span class="line">                        Object returnValue = method.invoke(target， args);</span><br><span class="line">                        System.out.println(<span class="string">"提交事务2"</span>);</span><br><span class="line">                        <span class="keyword">return</span> returnValue;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>测试类:App.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 目标对象</span></span><br><span class="line">        IUserDao target = <span class="keyword">new</span> UserDao();</span><br><span class="line">        <span class="comment">// 【原始的类型 class cn.itcast.b_dynamic.UserDao】</span></span><br><span class="line">        System.out.println(target.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 给目标对象，创建代理对象</span></span><br><span class="line">        IUserDao proxy = (IUserDao) <span class="keyword">new</span> ProxyFactory(target).getProxyInstance();</span><br><span class="line">        <span class="comment">// class $Proxy0   内存中动态生成的代理对象</span></span><br><span class="line">        System.out.println(proxy.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行方法   【代理对象】</span></span><br><span class="line">        proxy.save();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;x</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 目标对象</span></span><br><span class="line">        IUserDao target = <span class="keyword">new</span> UserDao();</span><br><span class="line">        <span class="comment">// 【原始的类型 class cn.itcast.b_dynamic.UserDao】</span></span><br><span class="line">        System.out.println(target.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 给目标对象，创建代理对象</span></span><br><span class="line">        IUserDao proxy = (IUserDao) <span class="keyword">new</span> ProxyFactory(target).getProxyInstance();</span><br><span class="line">        <span class="comment">// class $Proxy0   内存中动态生成的代理对象</span></span><br><span class="line">        System.out.println(proxy.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行方法   【代理对象】</span></span><br><span class="line">        proxy.save();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>结果:</strong></p>
 <p><code>class ReflectTest.UserDao
@@ -520,7 +520,7 @@ class com.sun.proxy.$Proxy0
             <p>原文作者：<a href="https://darlingorz.github.io">Darlingorz</a>
             <p>原文链接：<a href="https://darlingorz.github.io/2019/07/07/Java中的代理模式/">darlingorz.github.io/2019/07/07/Java中的代理模式/</a>
             <p>发表日期：July 7th 2019, 2:27:45 pm
-            <p>更新日期：July 22nd 2019, 11:24:29 pm
+            <p>更新日期：October 7th 2019, 12:04:06 am
             <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -727,9 +727,22 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 4
+        Total : 5
         </div>
         <!-- search  -->
         
@@ -742,6 +755,11 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/数据库-设计关系模式要用的概念/" >数据库--设计关系模式要用的概念</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -773,6 +791,8 @@ top:50vh;
         <span class="sidebar-tag-name" data-tags="随笔"><span class="iconfont-archer">&#xe606;</span>随笔</span>
     
         <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
